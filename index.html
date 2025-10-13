@@ -5,9 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pomodoro</title>
 <style>
-  body { background:#111; color:#fff; font-family:sans-serif;
-         display:flex; flex-direction:column; justify-content:center; align-items:center;
-         height:100vh; margin:0; font-size:4em; }
+  body {
+    background:#111;
+    color:#fff;
+    font-family:sans-serif;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+    font-size:4em;
+  }
   .phase { font-size:0.4em; margin-top:10px; color:#aaa; }
 </style>
 <script>
@@ -39,10 +48,14 @@ window.onload=startTimer;
 </script>
 </head>
 <body>
+  <!-- ⏱️ Temporizador -->
   <div id="time">25:00</div>
   <div class="phase" id="phase">Trabajo</div>
+
+  <!-- 🌧️ Sonido de lluvia -->
   <audio autoplay loop>
-    <source src="URL_DEL_SONIDO" type="audio/mpeg">
+    <source src="https://pixabay.com/es/sound-effects/lluvia-relajante-rain-2-210937/" type="audio/mpeg">
   </audio>
 </body>
 </html>
+
