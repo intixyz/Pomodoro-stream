@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pomodoro</title>
+<style>
+  body { background:#111; color:#fff; font-family:sans-serif;
+         display:flex; flex-direction:column; justify-content:center; align-items:center;
+         height:100vh; margin:0; font-size:4em; }
+  .phase { font-size:0.4em; margin-top:10px; color:#aaa; }
+</style>
+<script>
+let phases = [
+  {name:"Trabajo", duration:25*60},
+  {name:"Descanso corto", duration:5*60},
+  {name:"Trabajo", duration:25*60},
+  {name:"Descanso corto", duration:5*60},
+  {name:"Trabajo", duration:25*60},
+  {name:"Descanso largo", duration:15*60}
+];
+let current = 0, total = phases[current].duration;
+function startTimer(){
+  document.getElementById("phase").textContent = phases[current].name;
+  const timer = setInterval(()=>{
+    const m=Math.floor(total/60);
+    const s=total%60;
+    document.getElementById("time").textContent=`${m}:${s.toString().padStart(2,"0")}`;
+    total--;
+    if(total<0){
+      current++;
+      if(current>=phases.length){clearInterval(timer);return;}
+      total=phases[current].duration;
+      document.getElementById("phase").textContent=phases[current].name;
+    }
+  },1000);
+}
+window.onload=startTimer;
+</script>
+</head>
+<body>
+  <div id="time">25:00</div>
+  <div class="phase" id="phase">Trabajo</div>
+</body>
+</html>
