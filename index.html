@@ -6,56 +6,84 @@
 <title>Pomodoro</title>
 <style>
   body {
-    background:#111;
-    color:#fff;
-    font-family:sans-serif;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    margin:0;
-    font-size:4em;
+    background: #111;
+    color: #fff;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-size: 4em;
   }
-  .phase { font-size:0.4em; margin-top:10px; color:#aaa; }
+  .phase {
+    font-size: 0.4em;
+    margin-top: 10px;
+    color: #aaa;
+  }
+  .counter {
+    font-size: 0.3em;
+    margin-top: 5px;
+    color: #888;
+  }
 </style>
 <script>
-let phases = [
-  {name:"Trabajo", duration:25*60},
-  {name:"Descanso corto", duration:5*60},
-  {name:"Trabajo", duration:25*60},
-  {name:"Descanso corto", duration:5*60},
-  {name:"Trabajo", duration:25*60},
-  {name:"Descanso largo", duration:15*60}
-];
-let current = 0, total = phases[current].duration;
-function startTimer(){
-  document.getElementById("phase").textContent = phases[current].name;
-  const timer = setInterval(()=>{
-    const m=Math.floor(total/60);
-    const s=total%60;
-    document.getElementById("time").textContent=`${m}:${s.toString().padStart(2,"0")}`;
-    total--;
-    if(total<0){
-      current++;
-      if(current>=phases.length){clearInterval(timer);return;}
-      total=phases[current].duration;
-      document.getElementById("phase").textContent=phases[current].name;
-    }
-  },1000);
-}
-window.onload=startTimer;
+  let phases = [
+    { name: "Trabajo", duration: 50 * 60 },
+    { name: "Descanso", duration: 10 * 60 },
+    { name: "Trabajo", duration: 50 * 60 },
+    { name: "Descanso", duration: 10 * 60 },
+    { name: "Trabajo", duration: 50 * 60 },
+    { name: "Descanso", duration: 10 * 60 }
+  ];
+
+  let current = 0;
+  let total = phases[current].duration;
+
+  function updateDisplay() {
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    document.getElementById("time").textContent = `${m}:${s.toString().padStart(2, "0")}`;
+    document.getElementById("phase").textContent = phases[current].name;
+    document.getElementById("counter").textContent = `Fase ${current + 1} de ${phases.length}`;
+  }
+
+  function startTimer() {
+    updateDisplay();
+
+    const timer = setInterval(() => {
+      total--;
+
+      if (total < 0) {
+        current++;
+        if (current >= phases.length) {
+          clearInterval(timer);
+          document.getElementById("phase").textContent = "¡Completado!";
+          document.getElementById("counter").textContent = `Fases completadas: ${phases.length}`;
+          document.getElementById("time").textContent = "00:00";
+          return;
+        }
+        total = phases[current].duration;
+      }
+
+      updateDisplay();
+    }, 1000);
+  }
+
+  window.onload = startTimer;
 </script>
 </head>
 <body>
-  <!-- ⏱️ Temporizador -->
-  <div id="time">25:00</div>
+  <div id="time">50:00</div>
   <div class="phase" id="phase">Trabajo</div>
+  <div class="counter" id="counter">Fase 1 de 6</div>
 
-  <!-- 🌧️ Sonido de lluvia -->
-  <!-- audio autoplay loop -->
-    <!-- source src="https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3" -->
-  <!--/audio-->
+  <!-- 🌧️ Sonido de lluvia (opcional)
+  <audio autoplay loop>
+    <source src="https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3">
+  </audio>
+  -->
 </body>
 </html>
 
