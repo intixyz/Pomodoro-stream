@@ -27,19 +27,6 @@
     margin-top: 5px;
     color: #888;
   }
-  #startBtn {
-    font-size: 0.3em;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: #333;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-  }
-  #startBtn:hover {
-    background: #555;
-  }
 </style>
 <script>
   let phases = [
@@ -69,14 +56,18 @@
   }
 
   function changePhase() {
-    ding.currentTime = 0;
-    ding.play();
-    bgAudio.src = phases[current].bg;
-    bgAudio.play();
+    try {
+      ding.currentTime = 0;
+      ding.play();
+    } catch (e) { console.log("No se pudo reproducir ding:", e); }
+
+    try {
+      bgAudio.src = phases[current].bg;
+      bgAudio.play().catch(err => console.log("Autoplay bloqueado:", err));
+    } catch (e) { console.log("Error al iniciar sonido:", e); }
   }
 
   function startTimer() {
-    document.getElementById("startBtn").style.display = "none";
     changePhase();
     updateDisplay();
 
@@ -100,12 +91,18 @@
       updateDisplay();
     }, 1000);
   }
+
+  // 🚀 Iniciar automáticamente al cargar la página
+  window.addEventListener("load", () => {
+    // Intento de reproducir sonido con un mínimo retraso
+    setTimeout(() => startTimer(), 1000);
+  });
 </script>
 </head>
 <body>
   <div id="time">1:00</div>
   <div class="phase" id="phase">Trabajo</div>
   <div class="counter" id="counter">Fase 1 de 6</div>
-  <button id="startBtn" onclick="startTimer()">Iniciar Pomodoro</button>
 </body>
 </html>
+
