@@ -27,19 +27,38 @@
     margin-top: 5px;
     color: #888;
   }
+  #startBtn {
+    font-size: 0.3em;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #333;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+  }
+  #startBtn:hover {
+    background: #555;
+  }
 </style>
 <script>
   let phases = [
-    { name: "Trabajo", duration: 50 * 60 },
-    { name: "Descanso", duration: 10 * 60 },
-    { name: "Trabajo", duration: 50 * 60 },
-    { name: "Descanso", duration: 10 * 60 },
-    { name: "Trabajo", duration: 50 * 60 },
-    { name: "Descanso", duration: 10 * 60 }
+    { name: "Trabajo", duration: 50 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3" },
+    { name: "Descanso", duration: 10 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia3.mp3" },
+    { name: "Trabajo", duration: 50 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3" },
+    { name: "Descanso", duration: 10 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia3.mp3" },
+    { name: "Trabajo", duration: 50 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3" },
+    { name: "Descanso", duration: 10 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia3.mp3" }
   ];
 
   let current = 0;
   let total = phases[current].duration;
+  let timer = null;
+
+  const bgAudio = new Audio();
+  const ding = new Audio("https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/bell_break.mp3");
+  bgAudio.loop = true;
+  bgAudio.volume = 0.5;
 
   function updateDisplay() {
     const m = Math.floor(total / 60);
@@ -49,41 +68,44 @@
     document.getElementById("counter").textContent = `Fase ${current + 1} de ${phases.length}`;
   }
 
+  function changePhase() {
+    ding.currentTime = 0;
+    ding.play();
+    bgAudio.src = phases[current].bg;
+    bgAudio.play();
+  }
+
   function startTimer() {
+    document.getElementById("startBtn").style.display = "none";
+    changePhase();
     updateDisplay();
 
-    const timer = setInterval(() => {
+    timer = setInterval(() => {
       total--;
 
       if (total < 0) {
         current++;
         if (current >= phases.length) {
           clearInterval(timer);
+          bgAudio.pause();
           document.getElementById("phase").textContent = "¡Completado!";
           document.getElementById("counter").textContent = `Fases completadas: ${phases.length}`;
           document.getElementById("time").textContent = "00:00";
           return;
         }
         total = phases[current].duration;
+        changePhase();
       }
 
       updateDisplay();
     }, 1000);
   }
-
-  window.onload = startTimer;
 </script>
 </head>
 <body>
   <div id="time">50:00</div>
   <div class="phase" id="phase">Trabajo</div>
   <div class="counter" id="counter">Fase 1 de 6</div>
-
-  <!-- 🌧️ Sonido de lluvia (opcional)
-  <audio autoplay loop>
-    <source src="https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3">
-  </audio>
-  -->
+  <button id="startBtn" onclick="startTimer()">Iniciar Pomodoro</button>
 </body>
 </html>
-
