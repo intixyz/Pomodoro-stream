@@ -29,23 +29,19 @@
   }
 </style>
 <script>
+  // Fases del pomodoro
   let phases = [
-    { name: "Trabajo", duration: 1 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3" },
-    { name: "Descanso", duration: 1 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia3.mp3" },
-    { name: "Trabajo", duration: 1 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3" },
-    { name: "Descanso", duration: 1 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia3.mp3" },
-    { name: "Trabajo", duration: 1 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia2.mp3" },
-    { name: "Descanso", duration: 1 * 60, bg: "https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/lluvia3.mp3" }
+    { name: "Trabajo", duration: 1 * 60 },
+    { name: "Descanso", duration: 1 * 60 },
+    { name: "Trabajo", duration: 1 * 60 },
+    { name: "Descanso", duration: 1 * 60 },
+    { name: "Trabajo", duration: 1 * 60 },
+    { name: "Descanso", duration: 1 * 60 }
   ];
 
   let current = 0;
   let total = phases[current].duration;
   let timer = null;
-
-  const bgAudio = new Audio();
-  const ding = new Audio("https://github.com/intixyz/Pomodoro-stream/raw/refs/heads/main/bell_break.mp3");
-  bgAudio.loop = true;
-  bgAudio.volume = 0.5;
 
   function updateDisplay() {
     const m = Math.floor(total / 60);
@@ -55,20 +51,7 @@
     document.getElementById("counter").textContent = `Fase ${current + 1} de ${phases.length}`;
   }
 
-  function changePhase() {
-    try {
-      ding.currentTime = 0;
-      ding.play();
-    } catch (e) { console.log("No se pudo reproducir ding:", e); }
-
-    try {
-      bgAudio.src = phases[current].bg;
-      bgAudio.play().catch(err => console.log("Autoplay bloqueado:", err));
-    } catch (e) { console.log("Error al iniciar sonido:", e); }
-  }
-
   function startTimer() {
-    changePhase();
     updateDisplay();
 
     timer = setInterval(() => {
@@ -78,25 +61,19 @@
         current++;
         if (current >= phases.length) {
           clearInterval(timer);
-          bgAudio.pause();
           document.getElementById("phase").textContent = "¡Completado!";
           document.getElementById("counter").textContent = `Fases completadas: ${phases.length}`;
           document.getElementById("time").textContent = "00:00";
           return;
         }
         total = phases[current].duration;
-        changePhase();
       }
 
       updateDisplay();
     }, 1000);
   }
 
-  // 🚀 Iniciar automáticamente al cargar la página
-  window.addEventListener("load", () => {
-    // Intento de reproducir sonido con un mínimo retraso
-    setTimeout(() => startTimer(), 1000);
-  });
+  window.onload = startTimer;
 </script>
 </head>
 <body>
@@ -105,4 +82,3 @@
   <div class="counter" id="counter">Fase 1 de 6</div>
 </body>
 </html>
-
